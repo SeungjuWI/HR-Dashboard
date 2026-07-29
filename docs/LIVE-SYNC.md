@@ -1,48 +1,87 @@
-# 실시간 연동 켜는 법 (진우님 키 수령 후)
+# HR 대시보드 실시간 연동 가이드
 
-코드는 이미 준비되어 있습니다. 아래 환경변수 3개만 등록하면 대시보드가 자동으로
-실시간 모드로 전환됩니다. 등록 전까지는 기존 스냅샷으로 동작합니다 (리스크 없음).
+> 2026-07-29 기준. 대시보드: https://likelion-hr-dashboard.vercel.app
+> 연동 문제가 생기면 이 문서를 Claude에게 붙여넣고 증상을 설명하면 됩니다.
 
-## 1. 준비물 (진우님께 받을 것)
+## 1. 한눈에 보는 구조
 
-- 서비스 계정 키 JSON 파일 (Google Cloud에서 발급)
-- 그 서비스 계정 이메일(`xxx@....iam.gserviceaccount.com`)이 **[HR] 인원_퇴직 시트에
-  뷰어로 공유되어 있어야 함** — 사람 초대하듯 이메일 추가하면 끝
-- 연동할 시트의 URL (주소의 `/d/` 와 `/edit` 사이 문자열이 시트 ID)
+```
+구글 시트 (진우님 소유·관리)
+   │  진우님 계정 자격으로 읽기 (OAuth, 스프레드시트 "읽기 전용" 권한만)
+   ▼
+대시보드 서버 (Vercel) ── 10분마다 시트를 다시 읽음 (캐시)
+   ▼
+화면 ── 10분마다 다시 그림 → 시트 수정 후 최대 20분 안에 반영
+```
 
-## 2. Vercel 환경변수 등록
+- **공유 설정이 필요 없습니다.** 서버가 진우님 계정 자격으로 읽기 때문에, 진우님이 열 수 있는 시트면 대시보드도 읽을 수 있습니다. (회사 보안 정책상 서비스 계정(로봇) 초대가 막혀 있어 이 방식을 씁니다)
+- 연동이 어떤 이유로든 실패하면 대시보드는 **2026.07 스냅샷 데이터로 자동 전환**됩니다. 사이트가 죽지는 않습니다.
 
-vercel.com → HR 팀 → likelion-hr-dashboard → Settings → Environment Variables에서
-Production 환경으로 3개 추가:
+## 2. 연동 범위
 
-| 이름 | 값 |
+| 화면 | 상태 | 소스 시트 (읽는 탭) |
+|---|---|---|
+| 홈 KPI(현원·구성비), 인원, 구성원 명부, 퇴직 | 🟢 라이브 | [HR] 인원/퇴직 데이터 (구성원 정보, 2024·2025·2026 퇴사 데이터, 월별 인원 데이터, 퇴직률 시트) |
+| 리뷰 — 잡플래닛/블라인드/면접 리뷰/면접 설문 | 🟢 라이브 | 잡플래닛 데이터 (기업 리뷰(전체), 면접 리뷰(전체)), 블라인드 데이터 (리뷰(전체)), 2025·2026 채용 데이터 (면접 경험 설문) |
+| 채용 (지원자·퍼널·수수료) | ⚪ 스냅샷 | 확장 예정 — 연도별 채용 시트 구조 차이 정리 필요 |
+| 평판 (월별 평점 추이·타사 비교) | ⚪ 스냅샷 | 확장 예정 |
+
+## 3. 시트를 수정할 때 지켜야 할 것 (중요)
+
+시트 내용(행 추가·수정·삭제)은 **자유롭게** 하셔도 됩니다. 최대 20분 안에 자동 반영됩니다.
+다만 아래를 바꾸면 연동이 끊깁니다:
+
+- ❌ **탭 이름 변경 금지** — "구성원 정보", "월별 인원 데이터", "퇴직률 시트", "2024/2025/2026 퇴사 데이터", "기업 리뷰(전체)", "면접 리뷰(전체)", "리뷰(전체)", "면접 경험 설문"
+- ❌ **기존 컬럼 순서 변경·중간 삽입 금지** — 새 컬럼이 필요하면 **오른쪽 끝에** 추가하세요 (끝에 추가는 안전)
+- ⭕ 날짜 표기는 자유 — "2026. 6", "2026-06-30" 등 어떤 형식이든 알아서 처리됩니다
+- ⭕ 파일 자체를 새로 만들거나 교체할 때는 새 링크를 대시보드 담당자에게 전달 (아래 6번)
+
+## 4. 연동 상태 확인법
+
+1. **헤더 우상단 배지** — `LIVE 2026.07.29 20:11` = 그 시각에 시트를 읽었다는 뜻. `SNAPSHOT 2026.07.29` = 연동 꺼짐(폴백 중)
+2. **리뷰 페이지 하단** — "시트 실시간 연동" 또는 "2026.07 스냅샷"
+3. **정밀 점검** — 로그인한 브라우저에서 https://likelion-hr-dashboard.vercel.app/api/live-status 접속:
+   - `"mode": "live"` + `counts`(현원/퇴사/월별 행수)가 시트와 일치하면 정상
+   - `"mode": "snapshot"` 이면 `envMissing`에 빠진 환경변수가 표시됨
+   - `"mode": "live-error"` 면 `error` 내용을 Claude에게 붙여넣기
+
+## 5. 문제가 생겼을 때
+
+| 증상 | 원인 후보 | 조치 |
+|---|---|---|
+| 배지가 SNAPSHOT으로 돌아감 | 탭 이름 변경, 시트 삭제/이동, 동의 회수 | /api/live-status의 error 확인 → 3번 규칙 위반 여부 확인 |
+| 숫자가 20분 지나도 안 바뀜 | 캐시 정상 지연일 수 있음 | 30분까지 기다려보고, 그래도 안 되면 live-status 확인 |
+| 시트를 새 파일로 교체함 | 파일 ID가 바뀜 | 새 링크를 담당자에게 전달 (아래 6번 표에서 바꿀 위치 확인) |
+| 진우님 계정 비활성화/담당자 변경 | 연동 자격 소멸 | 시트에 접근 가능한 새 담당자가 https://likelion-hr-dashboard.vercel.app/api/oauth/start 접속 → 허용 → 화면의 연동 코드를 담당자에게 전달 → `GOOGLE_OAUTH_REFRESH_TOKEN` 교체 |
+
+권한 회수가 필요하면: 진우님 구글 계정 관리 → 보안 → 서드파티 액세스에서 "HR Dashboard" 제거. (대시보드는 스냅샷으로 폴백)
+
+## 6. 설정 값 위치 (개발·운영 참고)
+
+**Vercel 환경변수** (vercel.com → HR 팀 → likelion-hr-dashboard → Settings → Environment Variables):
+
+| 변수 | 내용 |
 |---|---|
-| `GOOGLE_SERVICE_ACCOUNT_EMAIL` | 키 JSON의 `client_email` 값 |
-| `GOOGLE_SERVICE_ACCOUNT_KEY` | 키 JSON의 `private_key` 값 전체 (`-----BEGIN...` 부터 끝까지, 개행 그대로 붙여넣기) |
-| `HR_SHEET_ID_PEOPLE` | 인원_퇴직 시트의 ID |
+| `GOOGLE_OAUTH_CLIENT_ID` / `GOOGLE_OAUTH_CLIENT_SECRET` | OAuth 앱 (GCP 프로젝트 hr-dashboard-oauth, wsj@likelion.net 소유, 내부용) |
+| `GOOGLE_OAUTH_REFRESH_TOKEN` | 진우님 동의로 발급된 연동 코드 — 재동의 시 이 값만 교체 |
+| `HR_SHEET_ID_PEOPLE` | 인원/퇴직 시트 ID — 파일 교체 시 이 값 수정 |
+| `GOOGLE_SERVICE_ACCOUNT_EMAIL` / `_KEY` | (예비) 서비스 계정 폴백 — 현재 미사용 |
 
-CLI로 하려면 (키 JSON이 `key.json`일 때):
+환경변수 교체는 CLI로: `printf '%s' "<값>" | vercel env add <변수명> production --scope hr-5529` 후 `vercel deploy --prod --scope hr-5529` 재배포 필요.
 
-```bash
-node -e "console.log(require('./key.json').client_email)" | vercel env add GOOGLE_SERVICE_ACCOUNT_EMAIL production --scope hr-5529
-node -e "console.log(require('./key.json').private_key)" | vercel env add GOOGLE_SERVICE_ACCOUNT_KEY production --scope hr-5529
-echo "<시트ID>" | vercel env add HR_SHEET_ID_PEOPLE production --scope hr-5529
-```
+**코드 지도** (수정 시 여기만 보면 됨):
 
-## 3. 재배포 & 확인
+| 파일 | 역할 |
+|---|---|
+| `lib/live/google.ts` | 구글 인증(OAuth 우선, 서비스 계정 폴백) + Sheets API 읽기 |
+| `lib/live/index.ts` | 인원/퇴직 연동 — 탭·범위 정의, 10분 캐시 |
+| `lib/live/parse.ts` | 행 → 대시보드 스키마 파서 (컬럼 매핑 변경 시 여기) |
+| `lib/live/reviews.ts` | 리뷰 4탭 연동 — **잡플래닛/블라인드/채용 시트 ID가 이 파일 상수**, 파일 교체 시 여기 수정 |
+| `app/api/oauth/start·callback` | 재동의 플로우 (연동 코드 재발급) |
+| `lib/data.ts` `getSnapshot()` | 데이터 진입점 — 라이브 실패 시 스냅샷 폴백 |
 
-```bash
-vercel deploy --prod --scope hr-5529
-```
+## 7. 남은 확장 (다음 작업자용)
 
-배포 후 로그인한 브라우저에서 `https://likelion-hr-dashboard.vercel.app/api/live-status` 접속:
-
-- `"mode": "live"` 면 성공 — `counts`가 실제 시트 행 수와 맞는지 확인
-- `"mode": "snapshot"` 이면 `envMissing`에 빠진 변수가 표시됨
-- live인데 counts가 이상하면 시트 탭 이름/권한 문제 — Claude에게 결과 붙여넣고 문의
-
-## 현재 연동 범위 (1차)
-
-인원_퇴직 시트: 구성원 명부, 퇴사 명부(2024~2026), 월별 인원 + 조직/고용형태/근속 집계.
-시트를 수정하면 **10분 안에** 대시보드에 반영됩니다.
-채용 4개 파일·잡플래닛·블라인드 시트는 실제 시트 구조 확인 후 같은 방식으로 확장 예정.
+- 채용 페이지 라이브: 연도별 4개 채용 시트 — 탭 구성이 연도마다 다름(2023은 리드타임 탭 분리, 2024~2026은 입사자명단/채용리드타임 통합). 퍼널 신뢰 소스는 지원자 탭이 아니라 입사자명단 탭.
+- 평판 페이지 라이브: 잡플래닛 "평점 데이터(전체)"·"타사 평점 데이터", 블라인드 "타사 평점 데이터_블라인드" 탭.
+- 패턴은 `lib/live/reviews.ts`를 그대로 따라 하면 됨 (파서 + unstable_cache + 페이지에서 폴백 병합).
