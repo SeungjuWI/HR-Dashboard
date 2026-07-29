@@ -3,16 +3,17 @@
 // 채용/리뷰 시트는 실제 시트 구조 확인 후 같은 패턴으로 확장한다.
 //
 // 필요 환경변수:
-//   GOOGLE_SERVICE_ACCOUNT_EMAIL / GOOGLE_SERVICE_ACCOUNT_KEY  (진우님이 받을 키)
+//   인증(둘 중 하나): GOOGLE_OAUTH_CLIENT_ID/SECRET/REFRESH_TOKEN (시트 소유자 동의 — 우선)
+//                    또는 GOOGLE_SERVICE_ACCOUNT_EMAIL/KEY (시트에 공유 필요)
 //   HR_SHEET_ID_PEOPLE  ([HR] 인원_퇴직 시트의 스프레드시트 ID)
 
 import { unstable_cache } from "next/cache";
 import type { DashboardData } from "../data";
-import { liveCredentials, sheetValues } from "./google";
+import { liveCredentials, oauthCredentials, sheetValues } from "./google";
 import { parseRoster, parseLeavers, parseMonthlyHeadcount, rosterAggregates } from "./parse";
 
 export function liveEnabled(): boolean {
-  return Boolean(liveCredentials() && process.env.HR_SHEET_ID_PEOPLE);
+  return Boolean((oauthCredentials() ?? liveCredentials()) && process.env.HR_SHEET_ID_PEOPLE);
 }
 
 export async function fetchPeopleFile(): Promise<Partial<DashboardData>> {

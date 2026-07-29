@@ -12,6 +12,6 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // 로그인 화면·인증 API·정적 자산은 게이트 제외
-  matcher: ["/((?!login|api/login|_next|brand|favicon.ico).*)"],
+  // 로그인 화면·인증 API·OAuth 동의(시트 소유자가 외부에서 접근)·정적 자산은 게이트 제외
+  matcher: ["/((?!login|api/login|api/oauth|_next|brand|favicon.ico).*)"],
 };
