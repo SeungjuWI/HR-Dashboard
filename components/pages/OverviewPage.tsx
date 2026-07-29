@@ -30,18 +30,18 @@ export default function OverviewPage({ data }: { data: DashboardData }) {
         <div className="meta">
           <span className="chip">연결 시트 <b>7</b></span>
           <span className="chip">데이터 기간 <b>2018 – 2026</b></span>
-          <span className="chip">실시간 연동 <b>준비 중</b></span>
+          <span className="chip">실시간 연동 {data.fetchedAt ? <b>가동 중</b> : <b>준비 중</b>}</span>
         </div>
 
         <div className="kpis">
           <Reveal className="kpi" delay={0.05}>
             <div className="k-label">총 현원</div>
             <div className="k-num"><CountUp value={data.roster.length} /><small>명</small></div>
-            <div className="k-sub">정규 107 · 인턴 9 · 계약 3</div>
+            <div className="k-sub">{data.empType.map(([n, v]) => `${n} ${v}`).join(" · ")}</div>
             <div className="k-stack" role="img" aria-label="고용형태 구성비 막대">
-              <i style={{ flexGrow: 107, background: "var(--c1)" }} />
-              <i style={{ flexGrow: 9, background: "var(--c2)" }} />
-              <i style={{ flexGrow: 3, background: "var(--c3)" }} />
+              {data.empType.map(([n, v], i) => (
+                <i key={n} style={{ flexGrow: v, background: `var(--c${i + 1})` }} />
+              ))}
             </div>
           </Reveal>
           <Reveal className="kpi" delay={0.12} grow>
