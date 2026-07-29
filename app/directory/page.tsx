@@ -3,6 +3,7 @@ import Directory from "@/components/Directory";
 import { PageHead } from "@/components/nav";
 
 export const metadata = { title: "구성원 명부 — LIKELION HR" };
+export const revalidate = 600;
 
 export default async function DirectoryRoute() {
   const data = await getSnapshot();

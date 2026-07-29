@@ -243,5 +243,13 @@ const SNAPSHOT: DashboardData = {
 };
 
 export async function getSnapshot(): Promise<DashboardData> {
-  return SNAPSHOT;
+  // 라이브 환경변수가 갖춰지면 실제 시트를 읽고, 실패하면 스냅샷으로 폴백한다.
+  const { liveEnabled, liveOverlay } = await import("./live");
+  if (!liveEnabled()) return SNAPSHOT;
+  try {
+    return await liveOverlay(SNAPSHOT);
+  } catch (e) {
+    console.error("[live] fallback to snapshot:", e);
+    return SNAPSHOT;
+  }
 }
