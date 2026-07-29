@@ -74,10 +74,10 @@ export function quarterlyRating(): [string, number][] {
     .map(([, v]) => [v.label, Math.round((v.sum / v.n) * 100) / 100]);
 }
 
-/* 면접 경험 설문 주요 지표 평균 (null 응답 제외, 5점 만점) */
-export function surveyAverages(keys: string[]): [string, number][] {
+/* 면접 경험 설문 주요 지표 평균 (null 응답 제외, 5점 만점) — rows 미지정 시 스냅샷 사용 */
+export function surveyAverages(keys: string[], rows: SurveyRow[] = surveyRows): [string, number][] {
   return keys.map((k) => {
-    const vals = surveyRows.map((r) => r.scores[k]).filter((v): v is number => typeof v === "number");
+    const vals = rows.map((r) => r.scores[k]).filter((v): v is number => typeof v === "number");
     const avg = vals.reduce((s, v) => s + v, 0) / Math.max(vals.length, 1);
     return [k, Math.round(avg * 100) / 100];
   });

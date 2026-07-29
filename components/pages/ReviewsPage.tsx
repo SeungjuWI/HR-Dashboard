@@ -6,6 +6,7 @@ import {
   jobplanetReviews, blindReviews, interviewReviews, surveyRows, surveyAverages,
   type JPReview, type BlindReview, type InterviewReview, type SurveyRow,
 } from "@/lib/reviews";
+import type { ReviewsData } from "@/lib/live/reviews";
 
 type Tab = "jp" | "bl" | "iv" | "sv";
 const PAGE = 20;
@@ -129,43 +130,53 @@ function SVCard({ r }: { r: SurveyRow }) {
   );
 }
 
-export default function ReviewsPage() {
+export default function ReviewsPage({ live }: { live?: ReviewsData | null }) {
   const [tab, setTab] = useState<Tab>("jp");
   const [q, setQ] = useState("");
   const [minRating, setMinRating] = useState(0); // 0 = 전체, n = n점만
   const [onlyComment, setOnlyComment] = useState(true);
   const [count, setCount] = useState(PAGE);
 
+  // 라이브 데이터가 오면 사용, 없으면(자격 미비·연동 장애) 추출 스냅샷으로 폴백
+  const jpAll = live?.jobplanet ?? jobplanetReviews;
+  const blAll = live?.blind ?? blindReviews;
+  const ivAll = live?.interview ?? interviewReviews;
+  const svAll = live?.survey ?? surveyRows;
+
   const query = q.trim().toLowerCase();
   const match = (...fields: string[]) =>
     !query || fields.some((f) => f.toLowerCase().includes(query));
 
   const jp = useMemo(
-    () => jobplanetReviews.filter((r) =>
+    () => jpAll.filter((r) =>
       (minRating === 0 || r.rating === minRating) &&
       match(r.headline, r.pros, r.cons, r.toMgmt, r.job)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [query, minRating],
   );
   const bl = useMemo(
-    () => blindReviews.filter((r) =>
+    () => blAll.filter((r) =>
       (minRating === 0 || r.rating === minRating) &&
       match(r.headline, r.pros, r.cons, r.reason, r.job)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [query, minRating],
   );
   const iv = useMemo(
-    () => interviewReviews.filter((r) => match(r.headline, r.questions, r.feel, r.job, r.result)),
+    () => ivAll.filter((r) => match(r.headline, r.questions, r.feel, r.job, r.result)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [query],
   );
   const sv = useMemo(
-    () => surveyRows.filter((r) => (!onlyComment || r.comment) && match(r.comment)),
+    () => svAll.filter((r) => (!onlyComment || r.comment) && match(r.comment)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [query, onlyComment],
   );
 
-  const avgs = useMemo(() => surveyAverages(["만족도", "포지션 평균", "안내 평균", "진행 평균"]), []);
+  const avgs = useMemo(
+    () => surveyAverages(["만족도", "포지션 평균", "안내 평균", "진행 평균"], svAll),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
   const list = tab === "jp" ? jp : tab === "bl" ? bl : tab === "iv" ? iv : sv;
   const visible = list.slice(0, count);
@@ -178,10 +189,10 @@ export default function ReviewsPage() {
       <section className="block" style={{ marginTop: 20 }}>
         <div className="fbar">
           <div className="tabs" role="tablist" aria-label="리뷰 소스">
-            <button className={`tab${tab === "jp" ? " on" : ""}`} role="tab" aria-selected={tab === "jp"} onClick={() => switchTab("jp")}>잡플래닛 <b>{jobplanetReviews.length}</b></button>
-            <button className={`tab${tab === "bl" ? " on" : ""}`} role="tab" aria-selected={tab === "bl"} onClick={() => switchTab("bl")}>블라인드 <b>{blindReviews.length}</b></button>
-            <button className={`tab${tab === "iv" ? " on" : ""}`} role="tab" aria-selected={tab === "iv"} onClick={() => switchTab("iv")}>면접 리뷰 <b>{interviewReviews.length}</b></button>
-            <button className={`tab${tab === "sv" ? " on" : ""}`} role="tab" aria-selected={tab === "sv"} onClick={() => switchTab("sv")}>면접 설문 <b>{surveyRows.length}</b></button>
+            <button className={`tab${tab === "jp" ? " on" : ""}`} role="tab" aria-selected={tab === "jp"} onClick={() => switchTab("jp")}>잡플래닛 <b>{jpAll.length}</b></button>
+            <button className={`tab${tab === "bl" ? " on" : ""}`} role="tab" aria-selected={tab === "bl"} onClick={() => switchTab("bl")}>블라인드 <b>{blAll.length}</b></button>
+            <button className={`tab${tab === "iv" ? " on" : ""}`} role="tab" aria-selected={tab === "iv"} onClick={() => switchTab("iv")}>면접 리뷰 <b>{ivAll.length}</b></button>
+            <button className={`tab${tab === "sv" ? " on" : ""}`} role="tab" aria-selected={tab === "sv"} onClick={() => switchTab("sv")}>면접 설문 <b>{svAll.length}</b></button>
           </div>
           <input className="dir-q" type="search" placeholder="키워드 검색 (본문 포함)" aria-label="리뷰 검색"
             value={q} onChange={(e) => { setQ(e.target.value); setCount(PAGE); }} />
@@ -212,7 +223,8 @@ export default function ReviewsPage() {
 
         <p className="dir-note" style={{ margin: "0 0 12px" }}>
           {list.length.toLocaleString("ko-KR")}건 표시
-          {tab === "sv" && " · 5점 만점 · 2023.12~2026.06 응답"}
+          {tab === "sv" && " · 5점 만점"}
+          {live ? " · 시트 실시간 연동" : " · 2026.07 스냅샷"}
         </p>
 
         <div className="rev-list">
