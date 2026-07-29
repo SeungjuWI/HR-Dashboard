@@ -1,0 +1,290 @@
+[
+  {
+    "month": "2025-01",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 103,
+    "joins": 4,
+    "leaves": 4,
+    "rate": 4.27
+  },
+  {
+    "month": "2025-01",
+    "corp": "샤이닝라이언",
+    "headcount": 14,
+    "joins": 0,
+    "leaves": 1,
+    "rate": null
+  },
+  {
+    "month": "2025-02",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 105,
+    "joins": 5,
+    "leaves": 4,
+    "rate": 3.36
+  },
+  {
+    "month": "2025-02",
+    "corp": "샤이닝라이언",
+    "headcount": 14,
+    "joins": 0,
+    "leaves": 0,
+    "rate": null
+  },
+  {
+    "month": "2025-03",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 106,
+    "joins": 5,
+    "leaves": 3,
+    "rate": 4.24
+  },
+  {
+    "month": "2025-03",
+    "corp": "샤이닝라이언",
+    "headcount": 12,
+    "joins": 0,
+    "leaves": 2,
+    "rate": null
+  },
+  {
+    "month": "2025-04",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 110,
+    "joins": 7,
+    "leaves": 2,
+    "rate": 3.33
+  },
+  {
+    "month": "2025-04",
+    "corp": "샤이닝라이언",
+    "headcount": 10,
+    "joins": 1,
+    "leaves": 2,
+    "rate": null
+  },
+  {
+    "month": "2025-05",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 115,
+    "joins": 1,
+    "leaves": 3,
+    "rate": 2.59
+  },
+  {
+    "month": "2025-05",
+    "corp": "샤이닝라이언",
+    "headcount": 1,
+    "joins": 0,
+    "leaves": 0,
+    "rate": null
+  },
+  {
+    "month": "2025-06",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 111,
+    "joins": 2,
+    "leaves": 9,
+    "rate": 8.04
+  },
+  {
+    "month": "2025-06",
+    "corp": "샤이닝라이언",
+    "headcount": 1,
+    "joins": 0,
+    "leaves": 0,
+    "rate": null
+  },
+  {
+    "month": "2025-07",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 111,
+    "joins": 7,
+    "leaves": 3,
+    "rate": 2.7
+  },
+  {
+    "month": "2025-07",
+    "corp": "샤이닝라이언",
+    "headcount": 2,
+    "joins": 1,
+    "leaves": 0,
+    "rate": null
+  },
+  {
+    "month": "2025-08",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 109,
+    "joins": 1,
+    "leaves": 3,
+    "rate": 2.75
+  },
+  {
+    "month": "2025-08",
+    "corp": "샤이닝라이언",
+    "headcount": 2,
+    "joins": 0,
+    "leaves": 0,
+    "rate": null
+  },
+  {
+    "month": "2025-09",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 110,
+    "joins": 6,
+    "leaves": 6,
+    "rate": 5.45
+  },
+  {
+    "month": "2025-09",
+    "corp": "샤이닝라이언",
+    "headcount": 5,
+    "joins": 3,
+    "leaves": 0,
+    "rate": null
+  },
+  {
+    "month": "2025-10",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 104,
+    "joins": 5,
+    "leaves": 11,
+    "rate": 10.09
+  },
+  {
+    "month": "2025-10",
+    "corp": "샤이닝라이언",
+    "headcount": 5,
+    "joins": 0,
+    "leaves": 0,
+    "rate": null
+  },
+  {
+    "month": "2025-11",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 111,
+    "joins": 9,
+    "leaves": 5,
+    "rate": 4.31
+  },
+  {
+    "month": "2025-11",
+    "corp": "샤이닝라이언",
+    "headcount": 5,
+    "joins": 0,
+    "leaves": 0,
+    "rate": null
+  },
+  {
+    "month": "2025-12",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 119,
+    "joins": 10,
+    "leaves": 4,
+    "rate": 3.36
+  },
+  {
+    "month": "2025-12",
+    "corp": "샤이닝라이언",
+    "headcount": 5,
+    "joins": 0,
+    "leaves": 1,
+    "rate": null
+  },
+  {
+    "month": "2026-01",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 120,
+    "joins": 4,
+    "leaves": 0,
+    "rate": 0.0
+  },
+  {
+    "month": "2026-01",
+    "corp": "샤이닝라이언",
+    "headcount": 3,
+    "joins": 0,
+    "leaves": 1,
+    "rate": null
+  },
+  {
+    "month": "2026-02",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 120,
+    "joins": 3,
+    "leaves": 7,
+    "rate": 5.83
+  },
+  {
+    "month": "2026-02",
+    "corp": "샤이닝라이언",
+    "headcount": 0,
+    "joins": 0,
+    "leaves": 3,
+    "rate": null
+  },
+  {
+    "month": "2026-03",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 119,
+    "joins": 6,
+    "leaves": 4,
+    "rate": 3.36
+  },
+  {
+    "month": "2026-03",
+    "corp": "샤이닝라이언",
+    "headcount": 0,
+    "joins": 0,
+    "leaves": 0,
+    "rate": null
+  },
+  {
+    "month": "2026-04",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 120,
+    "joins": 8,
+    "leaves": 8,
+    "rate": 6.67
+  },
+  {
+    "month": "2026-04",
+    "corp": "샤이닝라이언",
+    "headcount": 0,
+    "joins": 0,
+    "leaves": 0,
+    "rate": null
+  },
+  {
+    "month": "2026-05",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 119,
+    "joins": 4,
+    "leaves": 3,
+    "rate": 2.52
+  },
+  {
+    "month": "2026-05",
+    "corp": "샤이닝라이언",
+    "headcount": 0,
+    "joins": 0,
+    "leaves": 0,
+    "rate": null
+  },
+  {
+    "month": "2026-06",
+    "corp": "멋쟁이사자처럼",
+    "headcount": 119,
+    "joins": 1,
+    "leaves": 3,
+    "rate": 1.68
+  },
+  {
+    "month": "2026-06",
+    "corp": "샤이닝라이언",
+    "headcount": 0,
+    "joins": 0,
+    "leaves": 0,
+    "rate": null
+  }
+]

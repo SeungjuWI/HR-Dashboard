@@ -1,0 +1,497 @@
+[
+  {
+    "name": "조서원",
+    "joined": "2023-09-01",
+    "left": "2024-01-02",
+    "dept": "Education",
+    "contract": "계약",
+    "kind": "자발적",
+    "reason": "조직문화 문제"
+  },
+  {
+    "name": "함진경",
+    "joined": "2020-12-07",
+    "left": "2024-01-05",
+    "dept": "Education",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "건강 문제"
+  },
+  {
+    "name": "정지원",
+    "joined": "2022-06-02",
+    "left": "2024-01-31",
+    "dept": "Education",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "업무 적합성 문제"
+  },
+  {
+    "name": "채성민",
+    "joined": "2024-01-02",
+    "left": "2024-01-31",
+    "dept": "Finance",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "조직문화 문제"
+  },
+  {
+    "name": "남은경",
+    "joined": "2022-03-07",
+    "left": "2024-02-06",
+    "dept": "Platform Service",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "낮은 업무 만족도"
+  },
+  {
+    "name": "최영수",
+    "joined": "2023-03-27",
+    "left": "2024-02-14",
+    "dept": "People",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "팀 내 갈등"
+  },
+  {
+    "name": "윤정필",
+    "joined": "2022-05-23",
+    "left": "2024-02-19",
+    "dept": "People",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "팀 내 갈등"
+  },
+  {
+    "name": "이효준",
+    "joined": "2022-10-04",
+    "left": "2024-02-23",
+    "dept": "Education",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "업무 적합성 문제"
+  },
+  {
+    "name": "김태연",
+    "joined": "2023-09-01",
+    "left": "2024-02-29",
+    "dept": "Education",
+    "contract": "계약",
+    "kind": "비자발적",
+    "reason": "계약만료"
+  },
+  {
+    "name": "김민지",
+    "joined": "2021-12-13",
+    "left": "2024-02-29",
+    "dept": "Communication",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "연봉 불만"
+  },
+  {
+    "name": "김은지",
+    "joined": "2023-11-20",
+    "left": "2024-02-29",
+    "dept": "New Business",
+    "contract": "계약",
+    "kind": "비자발적",
+    "reason": "계약만료"
+  },
+  {
+    "name": "김성태",
+    "joined": "2023-09-25",
+    "left": "2024-03-07",
+    "dept": "Communication",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "업무 적합성 문제"
+  },
+  {
+    "name": "최영은",
+    "joined": "2023-01-16",
+    "left": "2024-03-18",
+    "dept": "Education",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "조직문화 문제"
+  },
+  {
+    "name": "최현종",
+    "joined": "2024-02-19",
+    "left": "2024-03-29",
+    "dept": "Education",
+    "contract": "계약",
+    "kind": "자발적",
+    "reason": "업무 적합성 문제"
+  },
+  {
+    "name": "김민정",
+    "joined": "2022-05-16",
+    "left": "2024-04-08",
+    "dept": "Product",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "조직문화 문제"
+  },
+  {
+    "name": "조윤경",
+    "joined": "2023-03-06",
+    "left": "2024-04-11",
+    "dept": "Education",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "대학원 진학"
+  },
+  {
+    "name": "김은정",
+    "joined": "2023-03-27",
+    "left": "2024-04-26",
+    "dept": "Education",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "성장 기회 부족"
+  },
+  {
+    "name": "장희승",
+    "joined": "2021-10-18",
+    "left": "2024-05-07",
+    "dept": "Education",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "성장 기회 부족"
+  },
+  {
+    "name": "이현정",
+    "joined": "2022-11-14",
+    "left": "2024-05-13",
+    "dept": "Education",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "조직문화 문제"
+  },
+  {
+    "name": "문은비",
+    "joined": "2023-10-16",
+    "left": "2024-05-16",
+    "dept": "QUADHASH",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "팀 내 갈등"
+  },
+  {
+    "name": "김지수",
+    "joined": "2023-02-01",
+    "left": "2024-05-16",
+    "dept": "Education",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "대학원 진학"
+  },
+  {
+    "name": "김미지",
+    "joined": "2024-01-15",
+    "left": "2024-05-31",
+    "dept": "New Buisness",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "업무 적합성 문제"
+  },
+  {
+    "name": "이승태",
+    "joined": "2022-05-09",
+    "left": "2024-05-31",
+    "dept": "Education",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "성장 기회 부족"
+  },
+  {
+    "name": "강예은",
+    "joined": "2024-03-08",
+    "left": "2024-06-07",
+    "dept": "Education",
+    "contract": "계약",
+    "kind": "비자발적",
+    "reason": "계약만료"
+  },
+  {
+    "name": "이준기",
+    "joined": "2021-03-08",
+    "left": "2024-06-07",
+    "dept": "Product",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "낮은 업무 만족도"
+  },
+  {
+    "name": "김재완",
+    "joined": "2023-09-25",
+    "left": "2024-06-21",
+    "dept": "Education",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "대학원 진학"
+  },
+  {
+    "name": "김상운",
+    "joined": "2024-04-29",
+    "left": "2024-07-05",
+    "dept": "Education",
+    "contract": "계약",
+    "kind": "자발적",
+    "reason": "업무 적합성 문제"
+  },
+  {
+    "name": "박현석",
+    "joined": "2024-04-08",
+    "left": "2024-07-05",
+    "dept": "Education",
+    "contract": "계약",
+    "kind": "비자발적",
+    "reason": "계약만료"
+  },
+  {
+    "name": "정민규",
+    "joined": "2024-04-08",
+    "left": "2024-07-05",
+    "dept": "Education",
+    "contract": "계약",
+    "kind": "비자발적",
+    "reason": "계약만료"
+  },
+  {
+    "name": "허건",
+    "joined": "2024-04-08",
+    "left": "2024-07-05",
+    "dept": "Education",
+    "contract": "계약",
+    "kind": "비자발적",
+    "reason": "계약만료"
+  },
+  {
+    "name": "조용훈",
+    "joined": "2022-11-01",
+    "left": "2024-07-10",
+    "dept": "Education",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "이직"
+  },
+  {
+    "name": "최설화",
+    "joined": "2023-04-24",
+    "left": "2024-07-15",
+    "dept": "Education",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "낮은 업무 만족도"
+  },
+  {
+    "name": "이지훈",
+    "joined": "2021-07-01",
+    "left": "2024-07-31",
+    "dept": "Strategy",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "이직"
+  },
+  {
+    "name": "황태호",
+    "joined": "2024-08-05",
+    "left": "2024-08-12",
+    "dept": "Development",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "업무 적합성 문제"
+  },
+  {
+    "name": "김동현",
+    "joined": "2024-08-12",
+    "left": "2024-08-13",
+    "dept": "Development",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "이직"
+  },
+  {
+    "name": "이승민",
+    "joined": "2024-07-08",
+    "left": "2024-08-16",
+    "dept": "Global",
+    "contract": "계약",
+    "kind": "자발적",
+    "reason": "업무 적합성 문제"
+  },
+  {
+    "name": "김동진",
+    "joined": "2024-08-05",
+    "left": "2024-08-28",
+    "dept": "New Biz",
+    "contract": "정규",
+    "kind": "비자발적",
+    "reason": "권고사직"
+  },
+  {
+    "name": "한지수",
+    "joined": "2024-06-01",
+    "left": "2024-08-30",
+    "dept": "New Biz",
+    "contract": "계약",
+    "kind": "비자발적",
+    "reason": "계약만료"
+  },
+  {
+    "name": "이상이",
+    "joined": "2023-08-01",
+    "left": "2024-09-30",
+    "dept": "Development",
+    "contract": "정규",
+    "kind": "비자발적",
+    "reason": "권고사직"
+  },
+  {
+    "name": "고재현",
+    "joined": "2022-10-04",
+    "left": "2024-10-03",
+    "dept": "Brand",
+    "contract": "정규",
+    "kind": "비자발적",
+    "reason": "권고사직"
+  },
+  {
+    "name": "유예림",
+    "joined": "2022-10-04",
+    "left": "2024-10-18",
+    "dept": "Brand",
+    "contract": "정규",
+    "kind": "비자발적",
+    "reason": "권고사직"
+  },
+  {
+    "name": "이정민",
+    "joined": "2023-09-25",
+    "left": "2024-09-30",
+    "dept": "Brand",
+    "contract": "정규",
+    "kind": "비자발적",
+    "reason": "권고사직"
+  },
+  {
+    "name": "장원석",
+    "joined": "2024-07-01",
+    "left": "2024-09-30",
+    "dept": "Brand",
+    "contract": "정규",
+    "kind": "비자발적",
+    "reason": "권고사직"
+  },
+  {
+    "name": "이난",
+    "joined": "2024-01-02",
+    "left": "2024-09-13",
+    "dept": "Management",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "팀 내 갈등"
+  },
+  {
+    "name": "채선영",
+    "joined": "2023-10-16",
+    "left": "2024-09-19",
+    "dept": "New Biz",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "이직"
+  },
+  {
+    "name": "이유정",
+    "joined": "2024-01-22",
+    "left": "2024-09-23",
+    "dept": "Management",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "팀 내 갈등"
+  },
+  {
+    "name": "이형재",
+    "joined": "2024-08-05",
+    "left": "2024-10-11",
+    "dept": "New Biz",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "업무 적합성 문제"
+  },
+  {
+    "name": "김지훈",
+    "joined": "2023-09-01",
+    "left": "2024-10-31",
+    "dept": "New Biz",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "성장 기회 부족"
+  },
+  {
+    "name": "박지은",
+    "joined": "2021-12-06",
+    "left": "2024-10-31",
+    "dept": "New Biz",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "팀 내 갈등"
+  },
+  {
+    "name": "서채영",
+    "joined": "2024-10-28",
+    "left": "2024-10-31",
+    "dept": "New Biz",
+    "contract": "계약",
+    "kind": "자발적",
+    "reason": "이직"
+  },
+  {
+    "name": "황혜미",
+    "joined": "2024-10-10",
+    "left": "2024-11-08",
+    "dept": "New Biz",
+    "contract": "계약",
+    "kind": "자발적",
+    "reason": "이직"
+  },
+  {
+    "name": "김한기",
+    "joined": "2022-07-04",
+    "left": "2024-11-29",
+    "dept": "Communication",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "휴식"
+  },
+  {
+    "name": "장남경",
+    "joined": "2024-10-10",
+    "left": "2024-11-22",
+    "dept": "New Biz",
+    "contract": "계약",
+    "kind": "자발적",
+    "reason": "낮은 업무 만족도"
+  },
+  {
+    "name": "오금희",
+    "joined": "2021-08-17",
+    "left": "2024-12-31",
+    "dept": "Communication",
+    "contract": "정규",
+    "kind": "자발적",
+    "reason": "휴식"
+  },
+  {
+    "name": "박소연",
+    "joined": "2024-07-03",
+    "left": "2024-12-31",
+    "dept": "Revenue Growth",
+    "contract": "계약",
+    "kind": "비자발적",
+    "reason": "계약만료"
+  }
+]
