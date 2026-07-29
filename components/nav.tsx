@@ -16,6 +16,7 @@ const TABS: [string, string][] = [
 
 export function CommandBar() {
   const path = usePathname();
+  if (path === "/login") return null;
   return (
     <header className="bar">
       <Link href="/" className="lockup">
