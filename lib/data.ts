@@ -34,6 +34,8 @@ export interface MonthlyHeadcount {
 
 export interface DashboardData {
   snapshotDate: string;
+  /** 시트를 실제로 읽은 시각(ISO) — 라이브 모드에서만 존재, 스냅샷이면 undefined */
+  fetchedAt?: string;
   roster: Person[];
   leavers: Leaver[];
   monthlyHeadcount: MonthlyHeadcount[];

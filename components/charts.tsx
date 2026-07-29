@@ -277,6 +277,13 @@ export function TrendLine({
   points: [string, number][]; w: number; h: number; color?: string; unit?: string; dec?: number; label: string;
 }) {
   const padL = 38, padR = 16, padT = 14, padB = 24;
+  if (points.length === 0) {
+    return (
+      <svg viewBox={`0 0 ${w} ${h}`} role="img" aria-label={label}>
+        <text x={w / 2} y={h / 2} className="axis" textAnchor="middle">데이터 없음</text>
+      </svg>
+    );
+  }
   const vals = points.map((p) => p[1]);
   const rawMin = Math.min(...vals), rawMax = Math.max(...vals);
   const span = rawMax - rawMin || Math.abs(rawMax) * 0.1 || 1;

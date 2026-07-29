@@ -10,7 +10,7 @@
 import { unstable_cache } from "next/cache";
 import type { DashboardData } from "../data";
 import { liveCredentials, oauthCredentials, sheetValues } from "./google";
-import { parseRoster, parseLeavers, parseMonthlyHeadcount, rosterAggregates } from "./parse";
+import { parseRoster, parseLeavers, parseMonthlyHeadcount, parseRateMap, rosterAggregates } from "./parse";
 
 export function liveEnabled(): boolean {
   return Boolean((oauthCredentials() ?? liveCredentials()) && process.env.HR_SHEET_ID_PEOPLE);
@@ -18,12 +18,13 @@ export function liveEnabled(): boolean {
 
 export async function fetchPeopleFile(): Promise<Partial<DashboardData>> {
   const id = process.env.HR_SHEET_ID_PEOPLE!;
-  const [rosterRows, l26, l25, l24, monthly] = await sheetValues(id, [
+  const [rosterRows, l26, l25, l24, monthly, rateRows] = await sheetValues(id, [
     "구성원 정보!A2:F",
     "2026 퇴사 데이터!A2:L",
     "2025 퇴사 데이터!A2:L",
     "2024 퇴사 데이터!A2:K",
     "월별 인원 데이터!A2:E",
+    "퇴직률 시트!A2:F",
   ]);
   const roster = parseRoster(rosterRows);
   const leavers = [...parseLeavers(l26), ...parseLeavers(l25), ...parseLeavers(l24)].sort(
@@ -31,9 +32,10 @@ export async function fetchPeopleFile(): Promise<Partial<DashboardData>> {
   );
   if (roster.length === 0) throw new Error("live roster empty — 시트 범위/권한 확인 필요");
   return {
+    fetchedAt: new Date().toISOString(), // 캐시 안에서 기록 → 실제 읽은 시각이 유지된다
     roster,
     leavers,
-    monthlyHeadcount: parseMonthlyHeadcount(monthly),
+    monthlyHeadcount: parseMonthlyHeadcount(monthly, parseRateMap(rateRows)),
     ...rosterAggregates(roster),
   };
 }

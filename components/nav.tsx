@@ -14,7 +14,21 @@ const TABS: [string, string][] = [
   ["/reviews", "리뷰"],
 ];
 
-export function CommandBar() {
+/* ISO 시각 → KST "2026.07.29 20:14" — 서버/클라이언트 동일 출력이라 hydration 안전 */
+function fmtKST(iso: string): string {
+  return new Date(iso)
+    .toLocaleString("sv-SE", {
+      timeZone: "Asia/Seoul",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+    .replace(/-/g, ".");
+}
+
+export function CommandBar({ fetchedAt, snapshotDate }: { fetchedAt?: string; snapshotDate: string }) {
   const path = usePathname();
   if (path === "/login") return null;
   return (
@@ -31,9 +45,16 @@ export function CommandBar() {
           </Link>
         ))}
       </nav>
-      <div className="status">
+      <div
+        className="status"
+        title={
+          fetchedAt
+            ? "시트에서 마지막으로 읽은 시각 (KST) — 10분마다 자동 갱신"
+            : "정적 스냅샷 데이터 기준일"
+        }
+      >
         <span className="dot" />
-        SNAPSHOT&nbsp;2026.07.29
+        {fetchedAt ? <>LIVE&nbsp;{fmtKST(fetchedAt)}</> : <>SNAPSHOT&nbsp;{snapshotDate.replace(/-/g, ".")}</>}
       </div>
     </header>
   );

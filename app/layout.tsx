@@ -3,6 +3,10 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { CommandBar } from "@/components/nav";
 import { Tooltip } from "@/components/motion";
+import { getSnapshot } from "@/lib/data";
+
+// 라이브 모드에서 페이지가 최신 캐시를 다시 그리도록 전 라우트 10분 재검증
+export const revalidate = 600;
 
 const pretendard = localFont({
   src: "./fonts/PretendardVariable.woff2",
@@ -23,16 +27,21 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const data = await getSnapshot();
   return (
     <html lang="ko" className={`${pretendard.variable} ${suit.variable}`}>
       <body>
         <div className="watermark" aria-hidden="true" />
         <div className="wrap">
-          <CommandBar />
+          <CommandBar fetchedAt={data.fetchedAt} snapshotDate={data.snapshotDate} />
           {children}
           <footer className="foot">
-            <span>수치는 2026.07.29 시트 스냅샷 집계 — 실시간 Google Sheets 연동은 시트 전환 후 활성화됩니다.</span>
+            <span>
+              {data.fetchedAt
+                ? "인원 데이터는 Google Sheets 라이브 연동 — 시트 수정 후 최대 20분 내 반영. 채용·평판은 2026.07.29 스냅샷."
+                : "수치는 2026.07.29 시트 스냅샷 집계 — 인원_퇴직 시트가 구글 시트로 변환되면 실시간 연동이 켜집니다."}
+            </span>
             <span className="m">LIKELION HR · INTERNAL</span>
           </footer>
         </div>

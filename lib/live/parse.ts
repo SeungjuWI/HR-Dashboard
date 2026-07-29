@@ -56,8 +56,19 @@ export function parseLeavers(rows: string[][]): Leaver[] {
     }));
 }
 
-/* 월별 인원 데이터: 기준월 | 소속 | 인원 수 | 입사자 | 퇴사자 */
-export function parseMonthlyHeadcount(rows: string[][]): MonthlyHeadcount[] {
+/* 퇴직률 시트: 기준월 | 소속 | 인원 수 | 입사자 | 퇴사자 | 퇴직률("4.27%") → "YYYY-MM|소속" → % */
+export function parseRateMap(rows: string[][]): Map<string, number> {
+  const map = new Map<string, number>();
+  rows.forEach((r) => {
+    const month = normMonth(r[0]);
+    const rate = parseFloat(String(r[5] ?? "").replace("%", ""));
+    if (month && r[1]?.trim() && Number.isFinite(rate)) map.set(`${month}|${r[1].trim()}`, rate);
+  });
+  return map;
+}
+
+/* 월별 인원 데이터: 기준월 | 소속 | 인원 수 | 입사자 | 퇴사자 (rate는 퇴직률 시트에서 병합) */
+export function parseMonthlyHeadcount(rows: string[][], rates?: Map<string, number>): MonthlyHeadcount[] {
   return rows
     .filter((r) => normMonth(r[0]) && r[1]?.trim())
     .map((r) => ({
@@ -66,7 +77,7 @@ export function parseMonthlyHeadcount(rows: string[][]): MonthlyHeadcount[] {
       headcount: Number(String(r[2]).replace(/[^\d.-]/g, "")) || 0,
       joins: Number(String(r[3]).replace(/[^\d.-]/g, "")) || 0,
       leaves: Number(String(r[4]).replace(/[^\d.-]/g, "")) || 0,
-      rate: null,
+      rate: rates?.get(`${normMonth(r[0])!}|${r[1].trim()}`) ?? null,
     }));
 }
 
