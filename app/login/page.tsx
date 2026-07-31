@@ -9,7 +9,7 @@ export default async function Login({
   return (
     <div className="login-box">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/logo.png" alt="LIKELION" className="login-logo" />
+      <img src="/brand/logo.svg" alt="멋쟁이사자처럼" className="login-logo" />
       <h1 className="login-title">HR Dashboard</h1>
       <p className="login-desc">사내 전용 페이지입니다. 접속 비밀번호를 입력하세요.</p>
       <form className="login-form" action="/api/login" method="POST">

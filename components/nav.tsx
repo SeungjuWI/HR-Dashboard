@@ -35,7 +35,7 @@ export function CommandBar({ fetchedAt, snapshotDate }: { fetchedAt?: string; sn
     <header className="bar">
       <Link href="/" className="lockup">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/logo.png" alt="LIKELION" />
+        <img src="/brand/logo.svg" alt="멋쟁이사자처럼" />
         <span className="hr-tag">HR</span>
       </Link>
       <nav aria-label="페이지 이동">
