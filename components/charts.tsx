@@ -25,7 +25,7 @@ export function Spark({ data, color = C.o }: { data: number[]; color?: string })
     <svg viewBox={`0 0 ${W} ${H}`} aria-hidden="true">
       <path d={`${d} L${W - P} ${H - 1} L${P} ${H - 1} Z`} fill={color} opacity={0.1} />
       <path d={d} fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="ln" pathLength={1} />
-      <circle cx={last[0]} cy={last[1]} r={3.2} fill={color} stroke="#fff" strokeWidth={1.5} />
+      <circle cx={last[0]} cy={last[1]} r={3.2} fill={color} stroke="var(--surface)" strokeWidth={1.5} />
     </svg>
   );
 }
@@ -180,7 +180,7 @@ export function RatingLine({
             <path d={d} fill="none" stroke={s.color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="ln" pathLength={1} />
             {pts.map((p) => (
               <g key={p.yr}>
-                <circle cx={p.x} cy={p.y} r={3.5} fill={s.color} stroke="#fff" strokeWidth={1.5} className="fade" />
+                <circle cx={p.x} cy={p.y} r={3.5} fill={s.color} stroke="var(--surface)" strokeWidth={1.5} className="fade" />
                 <circle cx={p.x} cy={p.y} r={12} fill="transparent" className="hit" data-tip={`${s.name} ${p.yr} · <b>${p.v.toFixed(2)}</b>`} />
               </g>
             ))}
@@ -318,7 +318,7 @@ export function TrendLine({
           <circle cx={X(i)} cy={Y(v)} r={10} fill="transparent" className="hit" data-tip={`${m} · <b>${fmt(v)}${unit}</b>`} />
         </g>
       ))}
-      <circle cx={X(points.length - 1)} cy={Y(last[1])} r={3.5} fill={color} stroke="#fff" strokeWidth={1.5} className="fade" />
+      <circle cx={X(points.length - 1)} cy={Y(last[1])} r={3.5} fill={color} stroke="var(--surface)" strokeWidth={1.5} className="fade" />
       <text x={X(points.length - 1) - 6} y={Y(last[1]) - 9} className="val fade" textAnchor="end">{fmt(last[1])}{unit}</text>
     </svg>
   );
@@ -383,7 +383,7 @@ export function Radar({ rows, label }: { rows: [string, number][]; label: string
         className="rad hit" data-tip="잡플래닛 항목별 평점 (5점 만점)" />
       {rows.map(([name, v], i) => {
         const p = pt(i, v);
-        return <circle key={name} cx={p[0]} cy={p[1]} r={3} fill={C.o} stroke="#fff" strokeWidth={1.2} className="fade" />;
+        return <circle key={name} cx={p[0]} cy={p[1]} r={3} fill={C.o} stroke="var(--surface)" strokeWidth={1.2} className="fade" />;
       })}
     </svg>
   );
