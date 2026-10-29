@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { DashboardData } from "@/lib/data";
 import { surveyRows, surveyAverages } from "@/lib/reviews";
+import { peakYear, yearLabel } from "@/lib/kpi";
 import { Reveal } from "@/components/motion";
 import { PageHead } from "@/components/nav";
 import { VBars, StackedHBars, FunnelList } from "@/components/charts";
@@ -19,10 +20,15 @@ export default function RecruitingPage({ data }: { data: DashboardData }) {
   const conversion = data.applicants.map((a, i) =>
     Math.round((data.hires[i] / a) * 1000) / 10,
   );
+  const applicantPeak = peakYear(data.years, data.applicants);
+  const hirePeak = peakYear(data.years, data.hires);
+  const convPeak = peakYear(data.years, conversion);
+  const hires2025 = data.hires[data.years.indexOf("2025")] ?? 0;
+  const totalApplicants = data.applicants.reduce((s, v) => s + v, 0);
   return (
     <>
       <PageHead eyebrow="Recruiting" title="채용"
-        desc="2023~2026 지원자 약 8,300건과 입사자명단 기준 실적 — 채용 실적의 신뢰 소스는 입사자명단 시트." />
+        desc={`${data.years[0]}~2026 지원자 ${totalApplicants.toLocaleString("ko-KR")}건과 입사자명단 기준 실적 — 채용 실적의 신뢰 소스는 입사자명단 시트.`} />
       <section className="block" style={{ marginTop: 24 }}>
         <div className="grid g-recruit">
           <Reveal className="card" grow>
@@ -30,7 +36,7 @@ export default function RecruitingPage({ data }: { data: DashboardData }) {
             <p className="note">지원자 시트 4개년 · 2026은 상반기</p>
             <figure>
               <VBars labels={data.years} data={data.applicants} w={340} h={200} unit="명"
-                label="연도별 지원자 막대 차트. 2025년 2,577명 최다" />
+                label={`연도별 지원자 막대 차트. ${yearLabel(applicantPeak.year)} ${applicantPeak.value.toLocaleString("ko-KR")}명 최다`} />
             </figure>
           </Reveal>
           <Reveal className="card" delay={0.08} grow>
@@ -38,7 +44,7 @@ export default function RecruitingPage({ data }: { data: DashboardData }) {
             <p className="note">입사자명단 기준 (신뢰 소스)</p>
             <figure>
               <VBars labels={data.years} data={data.hires} w={280} h={200} unit="명"
-                label="연도별 입사자 막대 차트. 2025년 125명 최다" />
+                label={`연도별 입사자 막대 차트. ${yearLabel(hirePeak.year)} ${hirePeak.value}명 최다`} />
             </figure>
           </Reveal>
           <Reveal className="card" delay={0.16} grow>
@@ -46,7 +52,7 @@ export default function RecruitingPage({ data }: { data: DashboardData }) {
             <p className="note">입사자 ÷ 지원자 · %</p>
             <figure>
               <VBars labels={data.years} data={conversion} w={280} h={200} unit="%" color="var(--c3)"
-                label="연도별 지원 대비 입사 전환율. 2025년 4.9% 최고" />
+                label={`연도별 지원 대비 입사 전환율. ${yearLabel(convPeak.year)} ${convPeak.value}% 최고`} />
             </figure>
           </Reveal>
         </div>
@@ -90,8 +96,8 @@ export default function RecruitingPage({ data }: { data: DashboardData }) {
         <Reveal className="card" style={{ marginTop: 14 }}>
           <h3>2025 기록 퍼널 <span className="h-tag">참고용</span></h3>
           <p className="note">
-            지원자 시트에 <b>기록된</b> 단계만 집계한 값입니다 — 단계 미기록이 2,395건으로,
-            실제 2025년 입사는 <b>125명</b>입니다. 실시간 연동 전 시트의 퍼널 기록 보완을 권장합니다.
+            지원자 시트에 <b>기록된</b> 단계만 집계한 값입니다 — 대부분의 지원 건은 단계가 비어 있어,
+            실제 2025년 입사는 <b>{hires2025}명</b>입니다. 실시간 연동 전 시트의 퍼널 기록 보완을 권장합니다.
           </p>
           <FunnelList rows={data.funnel2025} />
         </Reveal>

@@ -2,19 +2,33 @@
 
 import type { DashboardData } from "@/lib/data";
 import { joinCohorts, monthlySeries } from "@/lib/derive";
+import { composition } from "@/lib/kpi";
 import { Reveal } from "@/components/motion";
 import { PageHead } from "@/components/nav";
 import { VBars, HBars, Donut, MonthlyBars, TrendLine } from "@/components/charts";
 
 export default function PeoplePage({ data }: { data: DashboardData }) {
   const cohorts = joinCohorts(data.roster);
-  const recentJoins = monthlySeries(
-    data.roster.map((r) => r.joined),
-    "2025-08",
-    "2026-07",
-  );
+  // 기준일이 속한 달까지의 최근 12개월 — 스냅샷/라이브 어느 쪽이든 따라간다
+  const to = data.snapshotDate.slice(0, 7);
+  const from = (() => {
+    const [y, m] = to.split("-").map(Number);
+    const d = new Date(Date.UTC(y, m - 1 - 11, 1));
+    return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
+  })();
+  const recentJoins = monthlySeries(data.roster.map((r) => r.joined), from, to);
   const mssHeadcount = data.monthlyHeadcount.filter((r) => r.corp === "멋쟁이사자처럼");
   const mssRate = mssHeadcount.filter((r) => r.rate !== null);
+  const under2y = data.tenureDist
+    .filter(([label]) => label === "<1년" || label === "1~2년")
+    .reduce((s, [, v]) => s + v, 0);
+  const under2yPct = data.roster.length ? Math.round((under2y / data.roster.length) * 100) : 0;
+  const topTenure = [...data.tenureDist].sort((a, b) => b[1] - a[1])[0];
+  const topOrg = data.orgHeadcount[0];
+  const tailOrg = data.orgHeadcount[data.orgHeadcount.length - 1];
+  const hcRange = mssHeadcount.length
+    ? `${mssHeadcount[0].month.replace("-", ".")} ~ ${mssHeadcount[mssHeadcount.length - 1].month.replace("-", ".")}`
+    : "";
   return (
     <>
       <PageHead eyebrow="People" title="인원 현황"
@@ -23,10 +37,10 @@ export default function PeoplePage({ data }: { data: DashboardData }) {
         <div className="grid g-people">
           <Reveal className="card" grow>
             <h3>조직별 현원</h3>
-            <p className="note">조직명 정규화 적용 · 12개 조직</p>
+            <p className="note">조직명 정규화 적용 · {data.orgHeadcount.length}개 조직</p>
             <figure>
               <HBars rows={data.orgHeadcount} w={520} h={336} labW={150} unit="명"
-                label="조직별 현원 가로 막대 차트. IT Lab 28명부터 LIKELION 2명까지 12개 조직" />
+                label={`조직별 현원 가로 막대 차트. ${topOrg[0]} ${topOrg[1]}명부터 ${tailOrg[0]} ${tailOrg[1]}명까지 ${data.orgHeadcount.length}개 조직`} />
             </figure>
           </Reveal>
           <Reveal className="card" delay={0.08} grow>
@@ -39,15 +53,16 @@ export default function PeoplePage({ data }: { data: DashboardData }) {
             </div>
             <figure>
               <Donut rows={data.empType.map(([n, v], i) => [n, v, `var(--c${i + 1})`])}
-                label="고용형태 도넛 차트. 정규 107명, 인턴 9명, 계약 3명" />
+                label={`고용형태 도넛 차트. ${composition(data.empType)}`} />
             </figure>
           </Reveal>
           <Reveal className="card" delay={0.16} grow>
             <h3>근속 분포</h3>
-            <p className="note">현원 119명 중 <b>60%가 근속 2년 미만</b></p>
+            <p className="note">현원 {data.roster.length}명 중 <b>{under2yPct}%가 근속 2년 미만</b></p>
             <figure>
               <VBars labels={data.tenureDist.map((r) => r[0])} data={data.tenureDist.map((r) => r[1])}
-                w={220} h={190} unit="명" label="근속 분포 막대 차트. 1년 미만 45명이 최다" />
+                w={220} h={190} unit="명"
+                label={`근속 분포 막대 차트. ${topTenure[0]} ${topTenure[1]}명이 최다`} />
             </figure>
           </Reveal>
         </div>
@@ -71,10 +86,10 @@ export default function PeoplePage({ data }: { data: DashboardData }) {
         <div className="grid g-attrition" style={{ marginTop: 14 }}>
           <Reveal className="card" grow>
             <h3>월별 현원 추이 <span className="h-tag">멋쟁이사자처럼 법인</span></h3>
-            <p className="note">월별 인원 데이터 시트 · 2025.01 ~ 2026.06</p>
+            <p className="note">월별 인원 데이터 시트 · {hcRange}</p>
             <figure>
               <TrendLine points={mssHeadcount.map((r) => [r.month.slice(2).replace("-", "."), r.headcount])}
-                w={480} h={200} unit="명" label="월별 현원 추이. 2025년 1월 103명에서 증감" />
+                w={480} h={200} unit="명" label={`월별 현원 추이 ${hcRange}`} />
             </figure>
           </Reveal>
           <Reveal className="card" delay={0.08} grow>

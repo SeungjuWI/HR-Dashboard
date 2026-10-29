@@ -8,8 +8,16 @@ import { VBars, HBars, NetBars, MonthlyBars, StackedHBars } from "@/components/c
 
 const KIND_COLOR: Record<string, string> = { 자발적: "var(--c2)", 비자발적: "var(--c5)" };
 
+const MONTHLY_FROM = "2024-01";
+const MONTHLY_TO = "2026-09";
+const ymLabel = (ym: string) => `${ym.slice(0, 4)}년 ${Number(ym.slice(5))}월`;
+
 export default function AttritionPage({ data }: { data: DashboardData }) {
-  const monthly = monthlySeries(data.leavers.map((l) => l.left), "2024-01", "2026-09");
+  const monthly = monthlySeries(data.leavers.map((l) => l.left), MONTHLY_FROM, MONTHLY_TO);
+  const lastYear = data.years[data.years.length - 1];
+  const lastNet = data.netChange[data.netChange.length - 1];
+  const prevNet = data.netChange[data.netChange.length - 2];
+  const fmtNet = (v: number) => (v > 0 ? `+${v}` : `${v}`.replace("-", "−"));
   const reasons = topN(countBy(data.leavers, (l) => l.reason || "미기재"), 9);
   const depts = topN(countBy(data.leavers, (l) => l.dept), 8);
   const exitTenure = tenureAtExit(data.leavers);
@@ -21,11 +29,11 @@ export default function AttritionPage({ data }: { data: DashboardData }) {
       <section className="block" style={{ marginTop: 24 }}>
         <div className="grid g-attrition">
           <Reveal className="card" grow>
-            <h3>월별 퇴사 추이 <span className="h-tag">2024.01 – 2026.09</span></h3>
-            <p className="note">퇴사일 기준 · 2026.08 이후는 확정된 퇴사 예정</p>
+            <h3>월별 퇴사 추이 <span className="h-tag">{MONTHLY_FROM.replace("-", ".")} – {MONTHLY_TO.replace("-", ".")}</span></h3>
+            <p className="note">퇴사일 기준 · 기준일 이후는 확정된 퇴사 예정</p>
             <figure>
               <MonthlyBars rows={monthly} w={480} h={200} color="var(--c2)"
-                label="2025년 1월부터 2026년 9월까지 월별 퇴사 인원" />
+                label={`${ymLabel(MONTHLY_FROM)}부터 ${ymLabel(MONTHLY_TO)}까지 월별 퇴사 인원`} />
             </figure>
           </Reveal>
           <Reveal className="card" delay={0.08} grow>
@@ -33,7 +41,7 @@ export default function AttritionPage({ data }: { data: DashboardData }) {
             <p className="note">2024~2026 퇴사 {data.leavers.length}건 · 시트 기재 기준</p>
             <figure>
               <HBars rows={reasons} w={480} h={266} labW={130} unit="건" color="var(--c2)"
-                label="퇴사 사유별 인원. 계약만료와 이직이 상위" />
+                label={`퇴사 사유별 인원. ${reasons.slice(0, 3).map(([n, v]) => `${n} ${v}건`).join(", ")} 순`} />
             </figure>
           </Reveal>
         </div>
@@ -75,15 +83,15 @@ export default function AttritionPage({ data }: { data: DashboardData }) {
             <p className="note">퇴사자명단 시트 · 2026은 상반기</p>
             <figure>
               <VBars labels={data.years} data={data.leaversYearly} w={480} h={200} unit="명" color="var(--c2)"
-                label="연도별 퇴사자 막대 차트. 2023년 64명, 2025년 62명" />
+                label={`연도별 퇴사자 막대 차트. ${data.years.map((y, i) => `${y} ${data.leaversYearly[i]}명`).join(", ")}`} />
             </figure>
           </Reveal>
           <Reveal className="card" delay={0.08} grow>
             <h3>인원 순증감 <span className="h-tag">입사 − 퇴사</span></h3>
-            <p className="note">2026 상반기는 처음으로 순감소 전환</p>
+            <p className="note">{lastNet < 0 ? `${lastYear}은 처음으로 순감소 전환` : `${lastYear} 순증감 ${fmtNet(lastNet)}명`}</p>
             <figure>
               <NetBars labels={data.years} data={data.netChange} w={480} h={200}
-                label="연도별 인원 순증감 차트. 2025년 +63명에서 2026 상반기 -1명" />
+                label={`연도별 인원 순증감 차트. ${data.years[data.years.length - 2]} ${fmtNet(prevNet)}명에서 ${lastYear} ${fmtNet(lastNet)}명`} />
             </figure>
           </Reveal>
         </div>

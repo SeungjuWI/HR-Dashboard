@@ -10,9 +10,9 @@ export default async function DirectoryRoute() {
   return (
     <>
       <PageHead eyebrow="Directory" title="구성원 명부"
-        desc={`재직중 ${data.roster.length}명 · 퇴사자 ${data.leavers.length}명 — 이름, 조직, 퇴사 사유로 검색할 수 있습니다.`} />
+        desc={`재직중 ${data.roster.length}명 · 퇴사자 ${data.leavers.length}명 — 검색·정렬·필터와 CSV 내보내기를 지원합니다.`} />
       <section className="block" style={{ marginTop: 24 }}>
-        <Directory data={data} tall />
+        <Directory data={data} tall asOf={new Date().toISOString().slice(0, 10)} />
       </section>
     </>
   );

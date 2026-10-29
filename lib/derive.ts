@@ -3,6 +3,50 @@
 
 import type { Person, Leaver } from "./data";
 
+/* 연도별로 표기가 갈리는 조직명 통일 — 명부/퇴사 시트 양쪽에서 쓴다 */
+const ORG_NORMALIZE: Record<string, string> = {
+  "글로벌 신사업 본부": "신사업 본부",
+  "국내 신사업 본부": "신사업 본부",
+  AI학습연구소: "AI 학습연구소",
+  "New Buisness": "New Business",
+};
+export const normOrg = (org: string): string => ORG_NORMALIZE[org.trim()] ?? org.trim();
+
+/* 기준일(asOf) 시점에 실제로 재직 중인 사람만 남긴다.
+   구성원 정보 시트에는 이미 퇴사한 인원이 남아 있는 경우가 있어(시트 갱신 지연),
+   퇴사 명단에 asOf 이전 퇴사일이 기록된 사람을 현원에서 제외한다. */
+export function activeRoster(roster: Person[], leavers: Leaver[], asOf: string): Person[] {
+  const gone = new Set(
+    leavers.filter((l) => l.left <= asOf).map((l) => `${l.name}|${l.joined}`),
+  );
+  return roster.filter((p) => !gone.has(`${p.name}|${p.joined}`));
+}
+
+const TENURE_BUCKETS: [string, (mo: number) => boolean][] = [
+  ["<1년", (mo) => mo < 12],
+  ["1~2년", (mo) => mo >= 12 && mo < 24],
+  ["2~3년", (mo) => mo >= 24 && mo < 36],
+  ["3~4년", (mo) => mo >= 36 && mo < 48],
+  ["4년+", (mo) => mo >= 48],
+];
+
+/* 현원 명부에서 조직·고용형태·근속 집계를 계산 (스냅샷/라이브 공통) */
+export function rosterAggregates(roster: Person[], asOf: string) {
+  const count = (key: (p: Person) => string): [string, number][] => {
+    const m = new Map<string, number>();
+    roster.forEach((p) => m.set(key(p), (m.get(key(p)) ?? 0) + 1));
+    return [...m.entries()].sort((a, b) => b[1] - a[1]);
+  };
+  return {
+    orgHeadcount: count((p) => normOrg(p.org)),
+    empType: count((p) => p.type),
+    tenureDist: TENURE_BUCKETS.map(([label, test]) => [
+      label,
+      roster.filter((p) => test(monthsBetween(p.joined, asOf))).length,
+    ]) as [string, number][],
+  };
+}
+
 export function countBy<T>(rows: T[], key: (r: T) => string): [string, number][] {
   const m = new Map<string, number>();
   rows.forEach((r) => {

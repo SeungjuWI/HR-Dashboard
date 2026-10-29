@@ -4,6 +4,7 @@
 
 import leavers2024Json from "./extracted/leavers-2024.json";
 import monthlyHeadcountJson from "./extracted/monthly-headcount.json";
+import { activeRoster, normOrg, rosterAggregates } from "./derive";
 
 export interface Person {
   name: string;
@@ -72,7 +73,7 @@ export interface DashboardData {
 
 const p = (s: string): Person => {
   const [name, joined, tenure, org, type] = s.split("|");
-  return { name, joined, tenure, org, type };
+  return { name, joined, tenure, org: normOrg(org), type };
 };
 
 const l = (s: string): Leaver => {
@@ -80,7 +81,7 @@ const l = (s: string): Leaver => {
   return { name, joined, left, dept, contract, kind, reason };
 };
 
-/* 구성원 정보 시트 (현원 119명) */
+/* 구성원 정보 시트 원본 119행 — 이 중 퇴사일이 지난 인원은 ACTIVE에서 제외된다 */
 const ROSTER: Person[] = [
   "나성영|2018-05-23|8년 2개월|LIKELION|정규","이두희|2018-05-23|8년 2개월|LIKELION|정규",
   "이정연|2019-04-08|7년 3개월|Marketing|정규","박인식|2020-02-11|6년 5개월|AXP|정규",
@@ -202,18 +203,18 @@ const LEAVERS: Leaver[] = [
   .concat(leavers2024Json as Leaver[])
   .sort((a, b) => (a.left < b.left ? 1 : -1));
 
+const SNAPSHOT_DATE = "2026-07-29";
+
+/* 구성원 정보 시트에는 이미 퇴사한 인원이 남아 있어(시트 갱신 지연) 스냅샷 기준일로 걸러낸다.
+   조직·고용형태·근속 집계도 걸러낸 명부에서 다시 계산 — 화면의 모든 수치가 한 소스에서 나온다. */
+const ACTIVE = activeRoster(ROSTER, LEAVERS, SNAPSHOT_DATE);
+
 const SNAPSHOT: DashboardData = {
-  snapshotDate: "2026-07-29",
-  roster: ROSTER,
+  snapshotDate: SNAPSHOT_DATE,
+  roster: ACTIVE,
   leavers: LEAVERS,
   monthlyHeadcount: monthlyHeadcountJson as MonthlyHeadcount[],
-  orgHeadcount: [
-    ["IT Lab", 28], ["에듀 비즈니스 본부", 20], ["Marketing", 16], ["AXP", 15],
-    ["신사업 본부", 11], ["Brand Design Lab", 8], ["Management", 7], ["HR", 4],
-    ["Global", 3], ["Career", 3], ["AI 학습연구소", 2], ["LIKELION", 2],
-  ],
-  empType: [["정규", 107], ["인턴", 9], ["계약", 3]],
-  tenureDist: [["<1년", 45], ["1~2년", 26], ["2~3년", 21], ["3~4년", 10], ["4년+", 17]],
+  ...rosterAggregates(ACTIVE, SNAPSHOT_DATE),
   years: ["2023", "2024", "2025", "26 H1"],
   applicants: [498, 2122, 2577, 275],
   hires: [86, 68, 63, 26],
@@ -242,6 +243,15 @@ const SNAPSHOT: DashboardData = {
   ratingDist: { jobplanet: [7, 10, 27, 15, 24], blind: [3, 7, 17, 11, 2] },
   jpJobs: [["교육", 34], ["기획/경영", 15], ["마케팅/시장조사", 12], ["개발", 12], ["디자인", 6], ["기타", 4]],
   jpStatus: [["현직원", 41], ["전직원", 42]],
+};
+
+/* 진단용 — 라이브 값과 비교할 정적 스냅샷의 행 수 */
+export const snapshotBaseline = {
+  date: SNAPSHOT.snapshotDate,
+  roster: SNAPSHOT.roster.length,
+  rosterSheetRows: ROSTER.length,
+  leavers: SNAPSHOT.leavers.length,
+  monthlyHeadcount: SNAPSHOT.monthlyHeadcount.length,
 };
 
 export async function getSnapshot(): Promise<DashboardData> {

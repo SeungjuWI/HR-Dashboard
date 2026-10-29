@@ -10,10 +10,23 @@
 import { unstable_cache } from "next/cache";
 import type { DashboardData } from "../data";
 import { liveCredentials, oauthCredentials, sheetValues } from "./google";
-import { parseRoster, parseLeavers, parseMonthlyHeadcount, parseRateMap, rosterAggregates } from "./parse";
+import { parseRoster, parseLeavers, parseMonthlyHeadcount, parseRateMap } from "./parse";
+import { activeRoster, rosterAggregates } from "../derive";
 
 export function liveEnabled(): boolean {
   return Boolean((oauthCredentials() ?? liveCredentials()) && process.env.HR_SHEET_ID_PEOPLE);
+}
+
+/* 라이브 모드에서 빠져 있는 환경변수 — 진단 API가 그대로 보여준다 */
+export function missingEnv(): string[] {
+  const sheet = process.env.HR_SHEET_ID_PEOPLE ? [] : ["HR_SHEET_ID_PEOPLE"];
+  if (oauthCredentials() || liveCredentials()) return sheet;
+  const oauth = ["GOOGLE_OAUTH_CLIENT_ID", "GOOGLE_OAUTH_CLIENT_SECRET", "GOOGLE_OAUTH_REFRESH_TOKEN"];
+  const svc = ["GOOGLE_SERVICE_ACCOUNT_EMAIL", "GOOGLE_SERVICE_ACCOUNT_KEY"];
+  // 인증은 OAuth(권장) 또는 서비스 계정 둘 중 하나만 갖추면 된다 — 덜 빠진 쪽을 안내한다.
+  const missOauth = oauth.filter((k) => !process.env[k]);
+  const missSvc = svc.filter((k) => !process.env[k]);
+  return [...sheet, ...(missOauth.length <= missSvc.length ? missOauth : missSvc)];
 }
 
 export async function fetchPeopleFile(): Promise<Partial<DashboardData>> {
@@ -26,17 +39,20 @@ export async function fetchPeopleFile(): Promise<Partial<DashboardData>> {
     "월별 인원 데이터!A2:E",
     "퇴직률 시트!A2:F",
   ]);
-  const roster = parseRoster(rosterRows);
+  const sheetRoster = parseRoster(rosterRows);
   const leavers = [...parseLeavers(l26), ...parseLeavers(l25), ...parseLeavers(l24)].sort(
     (a, b) => (a.left < b.left ? 1 : -1),
   );
-  if (roster.length === 0) throw new Error("live roster empty — 시트 범위/권한 확인 필요");
+  if (sheetRoster.length === 0) throw new Error("live roster empty — 시트 범위/권한 확인 필요");
+  // 명부 시트에 남아 있는 기퇴사자를 오늘 기준으로 제외한다 (스냅샷과 동일한 규칙)
+  const asOf = new Date().toISOString().slice(0, 10);
+  const roster = activeRoster(sheetRoster, leavers, asOf);
   return {
     fetchedAt: new Date().toISOString(), // 캐시 안에서 기록 → 실제 읽은 시각이 유지된다
     roster,
     leavers,
     monthlyHeadcount: parseMonthlyHeadcount(monthly, parseRateMap(rateRows)),
-    ...rosterAggregates(roster),
+    ...rosterAggregates(roster, asOf),
   };
 }
 

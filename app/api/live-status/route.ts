@@ -2,7 +2,8 @@
 // 캐시를 우회해 시트를 직접 읽어보고, 성공/실패와 행 수를 그대로 보여준다.
 
 import { NextResponse } from "next/server";
-import { liveEnabled, fetchPeopleFile } from "@/lib/live";
+import { liveEnabled, missingEnv, fetchPeopleFile } from "@/lib/live";
+import { snapshotBaseline } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
@@ -10,10 +11,9 @@ export async function GET() {
   if (!liveEnabled()) {
     return NextResponse.json({
       mode: "snapshot",
-      envMissing: ["GOOGLE_SERVICE_ACCOUNT_EMAIL", "GOOGLE_SERVICE_ACCOUNT_KEY", "HR_SHEET_ID_PEOPLE"].filter(
-        (k) => !process.env[k],
-      ),
-      snapshotBaseline: { roster: 119, leavers: 157, monthlyHeadcount: 36 },
+      envMissing: missingEnv(),
+      envHint: "인증은 GOOGLE_OAUTH_*(권장) 또는 GOOGLE_SERVICE_ACCOUNT_* 중 한 세트만 있으면 됩니다.",
+      snapshotBaseline,
     });
   }
   try {
@@ -25,8 +25,8 @@ export async function GET() {
         leavers: live.leavers?.length ?? 0,
         monthlyHeadcount: live.monthlyHeadcount?.length ?? 0,
       },
-      snapshotBaseline: { roster: 119, leavers: 157, monthlyHeadcount: 36 },
-      note: "counts가 실제 시트 행 수와 맞는지 확인하세요. 페이지 반영은 최대 10분(캐시).",
+      snapshotBaseline,
+      note: "roster는 퇴사일이 지난 인원을 제외한 현원 수입니다(시트 행 수보다 적을 수 있음). 페이지 반영은 최대 10분(캐시).",
     });
   } catch (e) {
     return NextResponse.json(
