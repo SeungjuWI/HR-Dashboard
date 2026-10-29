@@ -6,5 +6,5 @@ export const AUTH_COOKIE = "llhr_auth";
 export const AUTH_SALT = "llhr-salt-2026";
 
 export function authToken(): string {
-  return process.env.DASHBOARD_TOKEN ?? "f5386e0792726f692c343a7095642adc90fd4cecff572e80a618abc51b596fa7";
+  return process.env.DASHBOARD_TOKEN ?? "0271ecfb42eaf7684b3c6c8463eddebbbb368bd88e1ae8548abcb11ed02792d4";
 }
